@@ -12,11 +12,11 @@
 #include <vector>
 
 #ifndef NO_EOSIO
-#include <eosiolib/eosio.hpp>
-#include <eosiolib/transaction.h>
-#include <eosiolib/types.h>
+#include <eosio/eosio.hpp>
+#include <eosio/transaction.hpp>
+#include <eosio/crypto.hpp>
 
-#define EOSIO_ASSERT(expr) eosio_assert(expr, "Failed: " # expr);
+#define EOSIO_ASSERT(expr) eosio::check(expr, "Failed: " # expr);
 #else
 #define EOSIO_ASSERT(expr) assert(expr);
 #endif
@@ -51,7 +51,7 @@ public:
       It is still _recommended_ to seed the generator with proper randomness of some kind. */
   Random()
   {
-    accumSeedRange({std::abs(tapos_block_num()), std::abs(tapos_block_prefix())});
+    accumSeedRange({std::abs(eosio::tapos_block_num()), std::abs(eosio::tapos_block_prefix())});
   }
 #endif
 
@@ -71,27 +71,27 @@ public:
   }
 
 #ifndef NO_EOSIO
-  void accumSeed(const checksum160 &extra)
+  void accumSeed(const eosio::checksum160 &extra)
   {
-    accumSeedArray(extra.hash);
+    accumSeedArray(extra.extract_as_byte_array());
   }
 
-  void accumSeed(const checksum256 &extra)
+  void accumSeed(const eosio::checksum256 &extra)
   {
-    accumSeedArray(extra.hash);
+    accumSeedArray(extra.extract_as_byte_array());
   }
 
-  void accumSeed(const checksum512 &extra)
+  void accumSeed(const eosio::checksum512 &extra)
   {
-    accumSeedArray(extra.hash);
+    accumSeedArray(extra.extract_as_byte_array());
   }
 
-  void accumSeed(const signature &extra)
+  void accumSeed(const eosio::signature &extra)
   {
     accumSeedArray(extra.data);
   }
 
-  void accumSeed(const public_key &extra)
+  void accumSeed(const eosio::public_key &extra)
   {
     accumSeedArray(extra.data);
   }
@@ -112,7 +112,7 @@ public:
   }
 
   template <typename T, std::size_t N>
-  void accumSeedArray(const T (&extra)[N])
+  void accumSeedArray(const std::array<T, N> &extra)
   {
     for (int i = 0; i < N; ++i) {
       accumSeed(extra[i]);
