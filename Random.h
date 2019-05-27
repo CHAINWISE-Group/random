@@ -12,11 +12,11 @@
 #include <vector>
 
 #ifndef NO_EOSIO
+#include <eosio/crypto.hpp>
 #include <eosio/eosio.hpp>
 #include <eosio/transaction.hpp>
-#include <eosio/crypto.hpp>
 
-#define EOSIO_ASSERT(expr) eosio::check(expr, "Failed: " # expr);
+#define EOSIO_ASSERT(expr) eosio::check(expr, "Failed: " #expr);
 #else
 #define EOSIO_ASSERT(expr) assert(expr);
 #endif
@@ -229,6 +229,6 @@ private:
     8039, 8053, 8059, 8069, 8081, 8087, 8089, 8093, 8101, 8111};
 };
 
-} // eosblox
+} // namespace eosblox
 
 #endif // EOS_BLOX_RANDOM_H
